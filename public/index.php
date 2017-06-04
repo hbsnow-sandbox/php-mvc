@@ -19,6 +19,9 @@ try {
 
 $charactor = new Charactor;
 $charactor->name = '山田';
+$charactor->grade = '1';
+$charactor->atk = '2';
+$charactor->def = '3';
 $date = new DateTime();
 $charactor->created_at = $date->format('Y-m-d H:i:s');
 
@@ -28,6 +31,12 @@ $charactor_mapper->insert($charactor);
 
 $result = $charactor_mapper->findAll()->fetchAll();
 ?>
+
+<pre>
+<?= var_dump($charactor); ?>
+</pre>
+
+<hr>
 
 <pre>
 <?= var_dump($result); ?>

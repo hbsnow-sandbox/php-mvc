@@ -15,14 +15,14 @@ class CharactorMapper extends AbstractDataMapper
         $stmt = $pdo->prepare('
             INSERT INTO charactor
             (name, grade, atk, def, created_at)
-            VALUES (?, ?, ?, ?)
+            VALUES (?, ?, ?, ?, ?)
         ');
 
         $stmt->bindParam(1, $name, PDO::PARAM_STR);
-        $stmt->bindParam(2, $grade, PDO::PARAM_STR);
-        $stmt->bindParam(3, $atk, PDO::PARAM_STR);
-        $stmt->bindParam(3, $def, PDO::PARAM_STR);
-        $stmt->bindParam(4, $created_at, PDO::PARAM_STR);
+        $stmt->bindParam(2, $grade, PDO::PARAM_INT);
+        $stmt->bindParam(3, $atk, PDO::PARAM_INT);
+        $stmt->bindParam(4, $def, PDO::PARAM_INT);
+        $stmt->bindParam(5, $created_at, PDO::PARAM_STR);
 
         if (!is_array($data)) {
             $data = array($data);
