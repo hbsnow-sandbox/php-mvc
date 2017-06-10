@@ -4,25 +4,18 @@ class CharactorMapper extends AbstractDataMapper
 {
     const MODEL_CLASS = 'Charactor';
 
-    /**
-     * Model\Entryか、Model\Entryの配列を引数に取り、全部DBにinsertします。
-     *
-     */
+
     function insert($data)
     {
         $pdo = $this->_pdo;
         $modelClass = self::MODEL_CLASS;
+
         $stmt = $pdo->prepare('
-            INSERT INTO charactor
-            (name, grade, atk, def, created_at)
-            VALUES (?, ?, ?, ?, ?)
+            INSERT INTO charactor(name)
+            VALUES (?)
         ');
 
         $stmt->bindParam(1, $name, PDO::PARAM_STR);
-        $stmt->bindParam(2, $grade, PDO::PARAM_INT);
-        $stmt->bindParam(3, $atk, PDO::PARAM_INT);
-        $stmt->bindParam(4, $def, PDO::PARAM_INT);
-        $stmt->bindParam(5, $created_at, PDO::PARAM_STR);
 
         if (!is_array($data)) {
             $data = array($data);
@@ -33,12 +26,10 @@ class CharactorMapper extends AbstractDataMapper
                 throw new InvalidArgumentException;
             }
 
-            $name  = $row->name;
-            $grade   = $row->grade;
-            $atk = $row->atk;
-            $def = $row->def;
-            $created_at = $row->created_at->format('c');
-            $stmt->execute();
+            $name       = $row->name;
+
+            $result = $stmt->execute();
+            var_dump($result);
 
             //autoincrementな主キーをオブジェクト側へ反映
             $row->id = $pdo->lastInsertId();
@@ -66,20 +57,21 @@ class CharactorMapper extends AbstractDataMapper
         $stmt->bindParam(4, $def, PDO::PARAM_INT);
         $stmt->bindParam(5, $id, PDO::PARAM_INT);
 
-        if (! is_array($data)) {
+        if (!is_array($data)) {
             $data = array($data);
         }
 
         foreach ($data as $row) {
-            if (! $row instanceof $modelClass || ! $row->isValid()) {
+            if (!$row instanceof $modelClass || ! $row->isValid()) {
                 throw new InvalidArgumentException;
             }
 
-            $id = $row->id;
-            $name = $row->name;
+            $id    = $row->id;
+            $name  = $row->name;
             $grade = $row->grade;
-            $atk = $row->atk;
-            $def = $row->def;
+            $atk   = $row->atk;
+            $def   = $row->def;
+
             $stmt->execute();
         }
     }
@@ -91,7 +83,8 @@ class CharactorMapper extends AbstractDataMapper
         $modelClass = self::MODEL_CLASS;
 
         $stmt = $this->_pdo->prepare('
-            DELETE FROM charactor
+            DELETE
+            FROM charactor
             WHERE id = ?
         ');
 
@@ -121,7 +114,7 @@ class CharactorMapper extends AbstractDataMapper
             WHERE id = ?
         ');
 
-        $stmt->bindParam(1, $entridyId, PDO::PARAM_INT);
+        $stmt->bindParam(1, $id, PDO::PARAM_INT);
         $stmt->execute();
         $this->_decorate($stmt);
 
